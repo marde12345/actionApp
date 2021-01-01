@@ -1,12 +1,13 @@
 package com.mardefasma.influaction_java;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.content.Intent;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,16 +19,18 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 import com.mardefasma.influaction_java.adapter.InfluencerAdapter;
 import com.mardefasma.influaction_java.adapter.ProductCategoryAdapter;
 import com.mardefasma.influaction_java.model.IconInfluencer;
 import com.mardefasma.influaction_java.model.Influencer;
+import com.mardefasma.influaction_java.model.LoginResponse;
 import com.mardefasma.influaction_java.model.ProductCategory;
+import com.mardefasma.influaction_java.model.User;
 import com.mardefasma.influaction_java.ui.login.LoginActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,13 +43,15 @@ public class MainActivity extends AppCompatActivity {
     TextView profileNameTextView;
 
     RecyclerView rvInfluencer, productCatRecycler;
-
+    ApiInterface mApiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mApiInterface = ApiClient.getRetrofitInstance().create(ApiInterface.class);
+        
         profileImageView = findViewById(R.id.imageView3);
         profileNameTextView = findViewById(R.id.textView5);
         final Button signOutButton = findViewById(R.id.logout);
@@ -68,6 +73,46 @@ public class MainActivity extends AppCompatActivity {
         influencerList.add(new Influencer(5,"Flying Dutchman","900000", "Loker Devi John","https://loremflickr.com/300/400", ChildIconList1()));
 
         setInfluencerItemRecycler(influencerList);
+
+//        Call<List<User>> userCall = mApiInterface.getUser();
+//        userCall.enqueue(new Callback<List<User>>() {
+//            @Override
+//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+//                Log.d("RES_CODE", "onResponse: "+response.body().get(0).toString());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<User>> call, Throwable t) {
+//                Log.d("ERR", "onFailure: "+t);
+//            }
+//        });
+//
+//        Call<User> userCallEmail = mApiInterface.getUserByEmail("mardefasma123up@gmail.com");
+//        userCallEmail.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                Log.d("RES_CODE", "onResponse: "+response.body().toString());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                Log.d("ERR", "onFailure: "+t);
+//            }
+//        });
+
+        Call<LoginResponse> userLogin = mApiInterface.loginUser("mardefasma123up@gmail.com","fasma0608");
+        userLogin.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                User userapa = response.body().getUser();
+                Log.d("RES_CODE", "onResponse: " + userapa.toString());
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.d("ERR", "onFailure: "+t);
+            }
+        });
 
         try {
             if (Preferences.getLoggedInUser(getBaseContext())!=null &&

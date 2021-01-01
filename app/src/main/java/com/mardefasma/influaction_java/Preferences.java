@@ -5,11 +5,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.Gson;
 
 public class Preferences {
     /** Pendeklarasian key-data berupa String, untuk sebagai wadah penyimpanan data.
      * Jadi setiap data mempunyai key yang berbeda satu sama lain */
-    static final String KEY_PHOTO_URL = "mbuh";
+    static final String KEY_PHOTO_URL = "Photo_url";
+    static final String KEY_ID_GOOGLE = "ID_GOOGLE";
+    static final String KEY_ACCOUNT = "Acc";
     static final String KEY_USER_TEREGISTER ="user", KEY_PASS_TEREGISTER ="pass";
     static final String KEY_USERNAME_SEDANG_LOGIN = "Username_logged_in";
     static final String KEY_STATUS_SEDANG_LOGIN = "Status_logged_in";
@@ -79,6 +82,41 @@ public class Preferences {
         return getSharedPreference(context).getString(KEY_PHOTO_URL,"");
     }
 
+    /** Deklarasi Edit Preferences dan mengubah data
+     *  yang memiliki key KEY_PHOTO_URL dengan parameter status */
+    public static void setKeyAccount(Context context, String json){
+        SharedPreferences.Editor editor = getSharedPreference(context).edit();
+        editor.putString(KEY_ACCOUNT,json);
+        editor.apply();
+    }
+    /** Mengembalikan nilai dari key KEY_STATUS_SEDANG_LOGIN berupa boolean */
+    public static String getKeyAccount(Context context){
+        return getSharedPreference(context).getString(KEY_ACCOUNT,"");
+    }
+
+    public static void setKeyIdGoogle(Context context, String id){
+        SharedPreferences.Editor editor = getSharedPreference(context).edit();
+        editor.putString(KEY_ID_GOOGLE,id);
+        editor.apply();
+    }
+    public static String getKeyIdGoogle(Context context){
+        return getSharedPreference(context).getString(KEY_ID_GOOGLE,"");
+    }
+
+    public static String convertGsaToGson(GoogleSignInAccount gsa){
+        Gson gson = new Gson();
+        String json = gson.toJson(gsa);
+
+        return json;
+    }
+
+    public static GoogleSignInAccount convertGsonToGsa(String json){
+        Gson gson = new Gson();
+        GoogleSignInAccount gsa = gson.fromJson(json, GoogleSignInAccount.class);
+
+        return gsa;
+    }
+
     /** Deklarasi Edit Preferences dan menghapus data, sehingga menjadikannya bernilai default
      *  khusus data yang memiliki key KEY_USERNAME_SEDANG_LOGIN dan KEY_STATUS_SEDANG_LOGIN */
     public static void clearLoggedInUser (Context context){
@@ -86,6 +124,7 @@ public class Preferences {
         editor.remove(KEY_USERNAME_SEDANG_LOGIN);
         editor.remove(KEY_STATUS_SEDANG_LOGIN);
         editor.remove(KEY_PHOTO_URL);
+        editor.remove(KEY_ID_GOOGLE);
         editor.apply();
     }
 }

@@ -191,8 +191,15 @@ public class LoginActivity extends AppCompatActivity{
             if (!account.getId().equals("")&&!account.getId().equals(null)){
 
                 Preferences.setKeyPhotoUrl(getBaseContext(),account.getPhotoUrl().toString());
+                Preferences.setKeyPhotoUrl(getBaseContext(),account.getIdToken());
                 Preferences.setLoggedInUser(getBaseContext(),account.getDisplayName());
                 Preferences.setLoggedInStatus(getBaseContext(),true);
+
+//                Preferences.setKeyAccount(getBaseContext(), Preferences.convertGsaToGson(account));
+
+//                Cek User ada ndak?
+//                Ada langsung buat session
+//                Tidak, buat akun dan simpan token
 
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(i);
