@@ -3,6 +3,7 @@ package com.mardefasma.influaction_java.api;
 import com.mardefasma.influaction_java.api.api_res.GetInf;
 import com.mardefasma.influaction_java.api.api_res.GetInfById;
 import com.mardefasma.influaction_java.api.api_res.LoginUser;
+import com.mardefasma.influaction_java.api.model.Endorse;
 import com.mardefasma.influaction_java.api.model.Influencer;
 import com.mardefasma.influaction_java.api.model.Platform;
 import com.mardefasma.influaction_java.api.model.User;
@@ -69,6 +70,10 @@ public interface ApiInterface {
                                  @Field("per_days") Integer per_days,
                                  @Field("follower") Integer follower,
                                  @Field("user_id") Integer user_id);
+
+    @FormUrlEncoded
+    @POST("endorse")
+    Call<List<Endorse>> getEndorseByInfId(@Field("inf_id") String inf_id);
 
 //    TODO: buat api submit endorse
 //    TODO: buat api endorsement

@@ -295,6 +295,7 @@ public class LoginActivity extends AppCompatActivity{
         Preferences.setKeyPhotoUrl(getBaseContext(),userRes.getPhoto_profile().toString());
         Preferences.setLoggedInUser(getBaseContext(),userRes.getName());
         Preferences.setKeyRole(getBaseContext(),userRes.getRole());
+        Preferences.setKeyId(getBaseContext(), userRes.getId().toString());
         Preferences.setLoggedInStatus(getBaseContext(),true);
     }
 

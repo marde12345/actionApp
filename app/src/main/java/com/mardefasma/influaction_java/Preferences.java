@@ -14,6 +14,7 @@ public class Preferences {
     static final String KEY_ID_GOOGLE = "ID_GOOGLE";
     static final String KEY_ACCOUNT = "Acc";
     static final String KEY_ROLE = "ROle";
+    static final String KEY_ID = "ID";
     static final String KEY_USER_TEREGISTER ="user", KEY_PASS_TEREGISTER ="pass";
     static final String KEY_USERNAME_SEDANG_LOGIN = "Username_logged_in";
     static final String KEY_STATUS_SEDANG_LOGIN = "Status_logged_in";
@@ -113,6 +114,15 @@ public class Preferences {
         return getSharedPreference(context).getString(KEY_ROLE,"");
     }
 
+    public static void setKeyId(Context context, String id){
+        SharedPreferences.Editor editor = getSharedPreference(context).edit();
+        editor.putString(KEY_ID,id);
+        editor.apply();
+    }
+    public static String getKeyId(Context context){
+        return getSharedPreference(context).getString(KEY_ID,"");
+    }
+
     public static String convertGsaToGson(GoogleSignInAccount gsa){
         Gson gson = new Gson();
         String json = gson.toJson(gsa);
@@ -136,6 +146,7 @@ public class Preferences {
         editor.remove(KEY_PHOTO_URL);
         editor.remove(KEY_ROLE);
         editor.remove(KEY_ID_GOOGLE);
+        editor.remove(KEY_ID);
         editor.apply();
     }
 }
