@@ -48,7 +48,18 @@ public interface ApiInterface {
     Call<LoginUser> registerUser(@Field("name") String name,
                                  @Field("email") String email,
                                  @Field("password") String password,
-                                 @Field("password_confirmation") String password_confirmation);
+                                 @Field("password_confirmation") String password_confirmation,
+                                 @Field("photo_profile") String photo_profile);
+
+    @FormUrlEncoded
+    @POST("update")
+//    TODO: buat api update
+    Call<LoginUser> updateUser(@Field("name") String name,
+                                 @Field("email") String email,
+                                 @Field("password") String password,
+                                 @Field("password_confirmation") String password_confirmation,
+                                 @Field("photo_profile") String photo_profile,
+                               @Field("location") String location);
 
     @FormUrlEncoded
     @POST("platform")

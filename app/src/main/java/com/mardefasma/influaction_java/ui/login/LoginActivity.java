@@ -45,9 +45,13 @@ import com.mardefasma.influaction_java.api.ApiInterface;
 import com.mardefasma.influaction_java.api.api_res.LoginUser;
 import com.mardefasma.influaction_java.api.model.User;
 import com.mardefasma.influaction_java.MainInfActivity;
+import com.mardefasma.influaction_java.data.model.LoggedInUser;
+
+import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity{
-    String TAG = "login";
+    String TAG = "Login Activity";
+    String DEFAULT_PASSWORD = "influaction123";
 
     private LoginViewModel loginViewModel;
     private SignInButton signInButton;
@@ -181,20 +185,7 @@ public class LoginActivity extends AppCompatActivity{
         });
 
         if (Preferences.getLoggedInStatus(getBaseContext())){
-            Intent intent;
-            switch (Preferences.getKeyRole(getBaseContext())){
-                case "inf":
-                    intent = new Intent(LoginActivity.this, MainInfActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    break;
-                case "cust":
-                default:
-                    intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    break;
-            }
+            roleRedirect(Preferences.getKeyRole(getBaseContext()));
         }
     }
 
@@ -206,21 +197,7 @@ public class LoginActivity extends AppCompatActivity{
                 if (response.isSuccessful() && response.body().getMessage() == null){
                     User userRes = response.body().getUser();
                     updatePreferences(userRes);
-                    Intent intent;
-
-                    switch (userRes.getRole()){
-                        case "inf":
-                            intent = new Intent(LoginActivity.this, MainInfActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            break;
-                        case "cust":
-                        default:
-                            intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            break;
-                    }
+                    roleRedirect(userRes.getRole());
                 }else{
                     Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
                 }
@@ -254,20 +231,94 @@ public class LoginActivity extends AppCompatActivity{
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (!account.getId().equals("")&&!account.getId().equals(null)){
 
+//                Call<User> userCall = mApiInterface.getUserByEmail(account.getEmail());
+//                userCall.enqueue(new Callback<User>() {
+//                    @Override
+//                    public void onResponse(Call<User> call, Response<User> response) {
+//                        if (response.isSuccessful()){
+//                            Log.d(TAG, "onResponse: "+response.body().toString());
+//                            if (response.body() != null){
+//                                User user = response.body();
+//                                updatePreferences(user);
+//                                roleRedirect(user.getRole());
+//                            }else{
+////                                register
+//                                Call<LoginUser> userCall1 = mApiInterface.registerUser(
+//                                        account.getDisplayName(),
+//                                        account.getEmail(),
+//                                        DEFAULT_PASSWORD,
+//                                        DEFAULT_PASSWORD,
+//                                        account.getPhotoUrl().toString()
+//                                );
+//                                userCall1.enqueue(new Callback<LoginUser>() {
+//                                    @Override
+//                                    public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+//                                        if (response.body() != null){
+//                                            User userRegister = response.body().getUser();
+//                                            updatePreferences(userRegister);
+//                                            roleRedirect(userRegister.getRole());
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(Call<LoginUser> call, Throwable t) {
+//                                        Log.e(TAG, "onFailure: ",t );
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<User> call, Throwable t) {
+//
+//                    }
+//                });
+
                 Preferences.setKeyPhotoUrl(getBaseContext(),account.getPhotoUrl().toString());
                 Preferences.setKeyIdGoogle(getBaseContext(),account.getIdToken());
                 Preferences.setLoggedInUser(getBaseContext(),account.getDisplayName());
                 Preferences.setLoggedInStatus(getBaseContext(),true);
 
-//                Preferences.setKeyAccount(getBaseContext(), Preferences.convertGsaToGson(account));
+                Call<LoginUser> userCall = mApiInterface.registerUser(
+                                        account.getDisplayName(),
+                                        account.getEmail(),
+                                        DEFAULT_PASSWORD,
+                                        DEFAULT_PASSWORD,
+                                        account.getPhotoUrl().toString()
+                                );
+                userCall.enqueue(new Callback<LoginUser>() {
+                    @Override
+                    public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+                        Log.d(TAG, "onResponse: Success Register");
+                    }
 
-//                Cek User ada ndak?
-//                Ada langsung buat session
-//                Tidak, buat akun dan simpan token
+                    @Override
+                    public void onFailure(Call<LoginUser> call, Throwable t) {
+                        Log.e(TAG, "onFailure: ",t );
+                    }
+                });
 
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(i);
-                finish();
+//                Call<LoginUser> userCall1 = mApiInterface.updateUser(
+//                        account.getDisplayName(),
+//                        account.getEmail(),
+//                        null,
+//                        null,
+//                        account.getPhotoUrl().toString(),
+//                        null);
+//                userCall1.enqueue(new Callback<LoginUser>() {
+//                    @Override
+//                    public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+//                        Log.d(TAG, "onResponse: Success Update");
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<LoginUser> call, Throwable t) {
+//                        Log.e(TAG, "onFailure: ",t );
+//                    }
+//                });
+                roleRedirect("cust");
+
             }else{
                 Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
             }
@@ -303,10 +354,29 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void updatePreferences(User userRes) {
+        Log.d(TAG, "updatePreferences: "+userRes.toString());
         Preferences.setKeyPhotoUrl(getBaseContext(),userRes.getPhoto_profile().toString());
         Preferences.setLoggedInUser(getBaseContext(),userRes.getName());
         Preferences.setKeyRole(getBaseContext(),userRes.getRole());
         Preferences.setLoggedInStatus(getBaseContext(),true);
+    }
+
+    private void roleRedirect(String role){
+        Intent intent;
+
+        switch (role){
+            case "inf":
+                intent = new Intent(LoginActivity.this, MainInfActivity.class);
+                break;
+            case "cust":
+            default:
+                intent = new Intent(LoginActivity.this, MainActivity.class);
+                break;
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
