@@ -231,50 +231,6 @@ public class LoginActivity extends AppCompatActivity{
             final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (!account.getId().equals("")&&!account.getId().equals(null)){
 
-//                Call<User> userCall = mApiInterface.getUserByEmail(account.getEmail());
-//                userCall.enqueue(new Callback<User>() {
-//                    @Override
-//                    public void onResponse(Call<User> call, Response<User> response) {
-//                        if (response.isSuccessful()){
-//                            Log.d(TAG, "onResponse: "+response.body().toString());
-//                            if (response.body() != null){
-//                                User user = response.body();
-//                                updatePreferences(user);
-//                                roleRedirect(user.getRole());
-//                            }else{
-////                                register
-//                                Call<LoginUser> userCall1 = mApiInterface.registerUser(
-//                                        account.getDisplayName(),
-//                                        account.getEmail(),
-//                                        DEFAULT_PASSWORD,
-//                                        DEFAULT_PASSWORD,
-//                                        account.getPhotoUrl().toString()
-//                                );
-//                                userCall1.enqueue(new Callback<LoginUser>() {
-//                                    @Override
-//                                    public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
-//                                        if (response.body() != null){
-//                                            User userRegister = response.body().getUser();
-//                                            updatePreferences(userRegister);
-//                                            roleRedirect(userRegister.getRole());
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure(Call<LoginUser> call, Throwable t) {
-//                                        Log.e(TAG, "onFailure: ",t );
-//                                    }
-//                                });
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<User> call, Throwable t) {
-//
-//                    }
-//                });
-
                 Preferences.setKeyPhotoUrl(getBaseContext(),account.getPhotoUrl().toString());
                 Preferences.setKeyIdGoogle(getBaseContext(),account.getIdToken());
                 Preferences.setLoggedInUser(getBaseContext(),account.getDisplayName());
@@ -299,26 +255,7 @@ public class LoginActivity extends AppCompatActivity{
                     }
                 });
 
-//                Call<LoginUser> userCall1 = mApiInterface.updateUser(
-//                        account.getDisplayName(),
-//                        account.getEmail(),
-//                        null,
-//                        null,
-//                        account.getPhotoUrl().toString(),
-//                        null);
-//                userCall1.enqueue(new Callback<LoginUser>() {
-//                    @Override
-//                    public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
-//                        Log.d(TAG, "onResponse: Success Update");
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<LoginUser> call, Throwable t) {
-//                        Log.e(TAG, "onFailure: ",t );
-//                    }
-//                });
                 roleRedirect("cust");
-
             }else{
                 Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
             }

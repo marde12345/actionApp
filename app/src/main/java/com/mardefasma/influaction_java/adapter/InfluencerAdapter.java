@@ -1,6 +1,7 @@
 package com.mardefasma.influaction_java.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mardefasma.influaction_java.DetailInfActivity;
 import com.mardefasma.influaction_java.R;
 import com.mardefasma.influaction_java.api.model.Influencer;
 import com.mardefasma.influaction_java.api.model.Platform;
@@ -90,20 +92,14 @@ public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.In
         holder.childRv.setAdapter(childItemAdapter);
         holder.childRv.setRecycledViewPool(viewPool);
 
-
-//        holder.ivInfluencerImage.setImageResource();
-
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent i = new Intent(context, Productdetails.class);
-///*
-//                Pair[] pairs = new Pair[1];
-//                pairs[0] = new Pair<View, String>(holder.prodImage, "image");
-//                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
-//               */ context.startActivity(i/*, activityOptions.toBundle()*/);
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, DetailInfActivity.class);
+                intent.putExtra("ID_INF", influencer.getUser().getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

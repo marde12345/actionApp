@@ -55,7 +55,7 @@ public class PlatformAdapter extends RecyclerView.Adapter<PlatformAdapter.ChildV
         // provided the source for the images
         // in the layout file itself
         int imageIconUrl;
-        Log.d(TAG, "onBindViewHolder: "+ platformList.get(position).getPlatform());
+//        Log.d(TAG, "onBindViewHolder: "+ platformList.get(position).getPlatform());
         switch (platformList.get(position).getPlatform()){
             case "twitter":
                 imageIconUrl = R.drawable.ic_twitter;
