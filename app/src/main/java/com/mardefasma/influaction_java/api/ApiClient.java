@@ -1,4 +1,4 @@
-package com.mardefasma.influaction_java;
+package com.mardefasma.influaction_java.api;
 
 import android.util.Log;
 

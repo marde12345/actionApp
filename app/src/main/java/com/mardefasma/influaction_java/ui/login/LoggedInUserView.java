@@ -5,11 +5,17 @@ package com.mardefasma.influaction_java.ui.login;
  */
 class LoggedInUserView {
     private String displayName;
-    //... other data fields that may be accessible to the UI
+    private String displayId;
 
-    LoggedInUserView(String displayName) {
+    public LoggedInUserView(String displayName, String displayId) {
         this.displayName = displayName;
+        this.displayId = displayId;
     }
+
+    public String getDisplayId() {
+        return displayId;
+    }
+//... other data fields that may be accessible to the UI
 
     String getDisplayName() {
         return displayName;

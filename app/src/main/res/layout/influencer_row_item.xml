@@ -81,7 +81,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_icon"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="40dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginStart="10dp"
 
@@ -103,18 +103,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/rv_icon" />
 
                 <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="80dp"
-                    android:fontFamily="@font/rubik_medium"
-                    android:text="Harga"
-                    android:textColor="@android:color/darker_gray"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView8"
-                    app:layout_constraintStart_toEndOf="@+id/textView8"
-                    app:layout_constraintTop_toTopOf="@+id/textView8" />
-
-                <TextView
                     android:id="@+id/influencer_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -126,18 +114,6 @@
                     app:layout_constraintHorizontal_bias="0.296"
                     app:layout_constraintStart_toStartOf="@+id/textView8"
                     app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-                <TextView
-                    android:id="@+id/influencer_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/rubik_bold"
-                    android:text="Rp. 100.000"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/influencer_location"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/textView9"
-                    app:layout_constraintTop_toTopOf="@+id/influencer_location" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

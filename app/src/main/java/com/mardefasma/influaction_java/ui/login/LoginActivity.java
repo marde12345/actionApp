@@ -12,6 +12,9 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,15 +40,21 @@ import com.google.android.gms.tasks.Task;
 import com.mardefasma.influaction_java.MainActivity;
 import com.mardefasma.influaction_java.Preferences;
 import com.mardefasma.influaction_java.R;
-import com.mardefasma.influaction_java.ui.login.LoginViewModel;
-import com.mardefasma.influaction_java.ui.login.LoginViewModelFactory;
+import com.mardefasma.influaction_java.api.ApiClient;
+import com.mardefasma.influaction_java.api.ApiInterface;
+import com.mardefasma.influaction_java.api.api_res.LoginUser;
+import com.mardefasma.influaction_java.api.model.User;
+import com.mardefasma.influaction_java.MainInfActivity;
 
 public class LoginActivity extends AppCompatActivity{
+    String TAG = "login";
 
     private LoginViewModel loginViewModel;
     private SignInButton signInButton;
     private GoogleSignInClient googleSignInClient;
     private int RC_SIGN_IN;
+    private ApiInterface mApiInterface;
+    private ProgressBar loadingProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,12 +63,14 @@ public class LoginActivity extends AppCompatActivity{
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+        mApiInterface = ApiClient.getRetrofitInstance().create(ApiInterface.class);
+
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final Button loginGoogleButton = findViewById(R.id.logingoogle);
         final Button loginSkipButton = findViewById(R.id.loginskip);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        loadingProgressBar = findViewById(R.id.loading);
 
         //        hide status bar
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
@@ -146,7 +157,9 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
+//                loginViewModel.login(usernameEditText.getText().toString(),
+//                        passwordEditText.getText().toString());
+                userLogin(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         });
@@ -168,8 +181,59 @@ public class LoginActivity extends AppCompatActivity{
         });
 
         if (Preferences.getLoggedInStatus(getBaseContext())){
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            Intent intent;
+            switch (Preferences.getKeyRole(getBaseContext())){
+                case "inf":
+                    intent = new Intent(LoginActivity.this, MainInfActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                case "cust":
+                default:
+                    intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+            }
         }
+    }
+
+    private void userLogin(String username, String password) {
+        Call<LoginUser> userCall = mApiInterface.loginUser(username,password);
+        userCall.enqueue(new Callback<LoginUser>() {
+            @Override
+            public void onResponse(Call<LoginUser> call, Response<LoginUser> response) {
+                if (response.isSuccessful() && response.body().getMessage() == null){
+                    User userRes = response.body().getUser();
+                    updatePreferences(userRes);
+                    Intent intent;
+
+                    switch (userRes.getRole()){
+                        case "inf":
+                            intent = new Intent(LoginActivity.this, MainInfActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            break;
+                        case "cust":
+                        default:
+                            intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            break;
+                    }
+                }else{
+                    Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+                }
+                loadingProgressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(Call<LoginUser> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+
+                loadingProgressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void LoginGoogle(){
@@ -191,7 +255,7 @@ public class LoginActivity extends AppCompatActivity{
             if (!account.getId().equals("")&&!account.getId().equals(null)){
 
                 Preferences.setKeyPhotoUrl(getBaseContext(),account.getPhotoUrl().toString());
-                Preferences.setKeyPhotoUrl(getBaseContext(),account.getIdToken());
+                Preferences.setKeyIdGoogle(getBaseContext(),account.getIdToken());
                 Preferences.setLoggedInUser(getBaseContext(),account.getDisplayName());
                 Preferences.setLoggedInStatus(getBaseContext(),true);
 
@@ -215,10 +279,34 @@ public class LoginActivity extends AppCompatActivity{
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
+
+        Call<User> userCall = mApiInterface.getUserById(Integer.parseInt(model.getDisplayId()));
+        userCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User userRes = response.body();
+                updatePreferences(userRes);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.e(TAG, "onFailure: ",t );
+            }
+        });
+
         // TODO : initiate successful logged in experience
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
 
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+    }
+
+    private void updatePreferences(User userRes) {
+        Preferences.setKeyPhotoUrl(getBaseContext(),userRes.getPhoto_profile().toString());
+        Preferences.setLoggedInUser(getBaseContext(),userRes.getName());
+        Preferences.setKeyRole(getBaseContext(),userRes.getRole());
+        Preferences.setLoggedInStatus(getBaseContext(),true);
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

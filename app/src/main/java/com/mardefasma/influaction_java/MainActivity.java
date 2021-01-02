@@ -19,22 +19,23 @@ import android.widget.TextView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.gson.Gson;
 import com.mardefasma.influaction_java.adapter.InfluencerAdapter;
 import com.mardefasma.influaction_java.adapter.ProductCategoryAdapter;
+import com.mardefasma.influaction_java.api.ApiClient;
+import com.mardefasma.influaction_java.api.ApiInterface;
+import com.mardefasma.influaction_java.api.api_res.GetInf;
 import com.mardefasma.influaction_java.model.IconInfluencer;
-import com.mardefasma.influaction_java.model.Influencer;
-import com.mardefasma.influaction_java.model.LoginResponse;
+import com.mardefasma.influaction_java.api.model.Influencer;
+import com.mardefasma.influaction_java.api.api_res.LoginUser;
 import com.mardefasma.influaction_java.model.ProductCategory;
-import com.mardefasma.influaction_java.model.User;
 import com.mardefasma.influaction_java.ui.login.LoginActivity;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    String TAG = "Main";
 
     InfluencerAdapter influencerAdapter;
     ProductCategoryAdapter productCategoryAdapter;
@@ -65,52 +66,27 @@ public class MainActivity extends AppCompatActivity {
         setProductRecycler(productCategoryList);
 
 
-        List<Influencer> influencerList = new ArrayList<>();
-        influencerList.add(new Influencer(1,"Marde Fasma","50000", "Madiun","https://loremflickr.com/300/400", ChildIconList1()));
-        influencerList.add(new Influencer(2,"Spongebob","100000", "Bikini Bottom","https://loremflickr.com/300/400", ChildIconList2()));
-        influencerList.add(new Influencer(3,"Patrick","50000", "Bikini Bottom","https://loremflickr.com/300/400", ChildIconList1()));
-        influencerList.add(new Influencer(4,"Olaf","500", "Kapal","https://loremflickr.com/300/400", ChildIconList1()));
-        influencerList.add(new Influencer(5,"Flying Dutchman","900000", "Loker Devi John","https://loremflickr.com/300/400", ChildIconList1()));
+//        List<Influencer> influencerList = new ArrayList<>();
+//        influencerList.add(new Influencer(1,"Marde Fasma","50000", "Madiun","https://loremflickr.com/300/400", ChildIconList1()));
+//        influencerList.add(new Influencer(2,"Spongebob","100000", "Bikini Bottom","https://loremflickr.com/300/400", ChildIconList2()));
+//        influencerList.add(new Influencer(3,"Patrick","50000", "Bikini Bottom","https://loremflickr.com/300/400", ChildIconList1()));
+//        influencerList.add(new Influencer(4,"Olaf","500", "Kapal","https://loremflickr.com/300/400", ChildIconList1()));
+//        influencerList.add(new Influencer(5,"Flying Dutchman","900000", "Loker Devi John","https://loremflickr.com/300/400", ChildIconList1()));
 
-        setInfluencerItemRecycler(influencerList);
-
-//        Call<List<User>> userCall = mApiInterface.getUser();
-//        userCall.enqueue(new Callback<List<User>>() {
-//            @Override
-//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-//                Log.d("RES_CODE", "onResponse: "+response.body().get(0).toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<User>> call, Throwable t) {
-//                Log.d("ERR", "onFailure: "+t);
-//            }
-//        });
-//
-//        Call<User> userCallEmail = mApiInterface.getUserByEmail("mardefasma123up@gmail.com");
-//        userCallEmail.enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                Log.d("RES_CODE", "onResponse: "+response.body().toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                Log.d("ERR", "onFailure: "+t);
-//            }
-//        });
-
-        Call<LoginResponse> userLogin = mApiInterface.loginUser("mardefasma123up@gmail.com","fasma0608");
-        userLogin.enqueue(new Callback<LoginResponse>() {
+        Call<GetInf> getInfCall = mApiInterface.getInfluencers();
+        getInfCall.enqueue(new Callback<GetInf>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                User userapa = response.body().getUser();
-                Log.d("RES_CODE", "onResponse: " + userapa.toString());
+            public void onResponse(Call<GetInf> call, Response<GetInf> response) {
+                Log.d(TAG, "onResponse: "+response.body().getInfluencerList().toString());
+                List<Influencer> influencerList = response.body().getInfluencerList();
+                if (influencerList.size()>0) {
+                    setInfluencerItemRecycler(influencerList);
+                }
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Log.d("ERR", "onFailure: "+t);
+            public void onFailure(Call<GetInf> call, Throwable t) {
+                Log.e(TAG, "onFailure: ",t );
             }
         });
 
@@ -128,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("mbuh", "onCreate: asdasd");
         }
 
+        if (!Preferences.getLoggedInStatus(getBaseContext())) signOutButton.setVisibility(View.GONE);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

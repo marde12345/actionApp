@@ -9,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mardefasma.influaction_java.R;
-import com.mardefasma.influaction_java.model.Influencer;
+import com.mardefasma.influaction_java.api.model.Influencer;
+import com.mardefasma.influaction_java.api.model.Platform;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.InfluencerViewHolder> {
+    String TAG = "Influencer Adapter";
 
     Context context;
     List<Influencer> influencerList;
@@ -56,17 +58,23 @@ public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.In
         Influencer influencer
                 = influencerList.get(position);
 
-        holder.tvInfluencerName.setText(influencer.getInfluencerName());
-        holder.tvInfluencerLocation.setText(influencer.getInfluencerLocation());
+        holder.tvInfluencerName.setText(influencer.getUser().getName());
+        holder.tvInfluencerLocation.setText(influencer.getUser().getLocation());
 
-        holder.tvInfluencerPrice.setText("Rp. " + influencer.getInfluencerPrice());
-        holder.tvInfluencerPrice.setTextColor(context.getResources().getColor(colorTexts[randomNum]));
+//        holder.tvInfluencerPrice.setText("Rp. " + influencer.getInfluencerPrice());
+//        holder.tvInfluencerPrice.setTextColor(context.getResources().getColor(colorTexts[randomNum]));
 
         holder.ivInfluencerImageBg.setImageResource(bgImgs[randomNum]);
 //        holder.ivInfluencerImageBg.setBackground(ContextCompat.getDrawable(context,bgImgs[randomNum]));
 
         try {
-            Picasso.get().load(influencer.getInfluencerImageUrl()).memoryPolicy(MemoryPolicy.NO_CACHE).into(holder.ivInfluencerImage);
+            if (influencer.getUser().getPhoto_profile() != null && influencer.getUser().getPhoto_profile() != "" ) {
+                Log.d(TAG, "onBindViewHolder: " + influencer.getUser().getPhoto_profile());
+                Picasso.get().load(influencer.getUser().getPhoto_profile()).placeholder(R.mipmap.ic_launcher).memoryPolicy(MemoryPolicy.NO_CACHE).into(holder.ivInfluencerImage);
+            }else {
+                Picasso.get().load("https://loremflickr.com/300/400").placeholder(R.mipmap.ic_launcher).memoryPolicy(MemoryPolicy.NO_CACHE).into(holder.ivInfluencerImage);
+            }
+
         }catch (Exception e){
             Log.d("mbuh", "onBindViewHolder: ");
         };
@@ -76,10 +84,8 @@ public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.In
                 holder.childRv.getContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false);
-        layoutManager.setInitialPrefetchItemCount(influencer.getInfluencerIcons().size());
-        IconInfluencerAdapter childItemAdapter
-                = new IconInfluencerAdapter(
-                        context,influencer.getInfluencerIcons());
+        layoutManager.setInitialPrefetchItemCount(influencer.getPlatformList().size());
+        PlatformAdapter childItemAdapter = new PlatformAdapter(context,influencer.getPlatformList());
         holder.childRv.setLayoutManager(layoutManager);
         holder.childRv.setAdapter(childItemAdapter);
         holder.childRv.setRecycledViewPool(viewPool);
@@ -114,7 +120,7 @@ public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.In
             super(itemView);
 
             ivInfluencerImage = itemView.findViewById(R.id.photoprofileinfluencer);
-            tvInfluencerPrice = itemView.findViewById(R.id.influencer_price);
+//            tvInfluencerPrice = itemView.findViewById(R.id.influencer_price);
             tvInfluencerLocation = itemView.findViewById(R.id.influencer_location);
             tvInfluencerName = itemView.findViewById(R.id.influencer_name);
 
