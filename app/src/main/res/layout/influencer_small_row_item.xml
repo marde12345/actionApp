@@ -7,8 +7,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_influencer"
-        android:layout_width="250dp"
-        android:layout_height="500dp"
+        android:layout_width="150dp"
+        android:layout_height="300dp"
         android:layout_margin="10dp"
         app:cardElevation="5dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/influencer_bg_image"
-            android:layout_width="250dp"
-            android:layout_height="500dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:transitionName="image"
@@ -38,7 +38,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvphotoprofile"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="25dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="16dp"
@@ -49,14 +49,14 @@
                 <ImageView
                     android:id="@+id/photoprofileinfluencer"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
                     />
             </androidx.cardview.widget.CardView>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/influencer_detail"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
                 android:background="@drawable/bg_detail_page"
 
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +96,7 @@
                     android:id="@+id/textView8"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/rubik_medium"
                     android:text="Lokasi"
                     android:textColor="@android:color/darker_gray"

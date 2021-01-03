@@ -1,11 +1,14 @@
 package com.mardefasma.influaction_java.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mardefasma.influaction_java.DetailInfActivity;
+import com.mardefasma.influaction_java.FilterInfluencerActivity;
 import com.mardefasma.influaction_java.R;
 import com.mardefasma.influaction_java.model.ProductCategory;
 
@@ -35,8 +38,17 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+        ProductCategory productCategory = productCategoryList.get(position);
 
-        holder.catagoryName.setText(productCategoryList.get(position).getProductName());
+        holder.catagoryName.setText(productCategory.getProductName());
+        holder.catagoryName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FilterInfluencerActivity.class);
+                intent.putExtra("ID_INF", productCategory.getProductName());
+                context.startActivity(intent);
+            }
+        });
 
     }
 

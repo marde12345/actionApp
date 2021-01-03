@@ -7,6 +7,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +37,7 @@ public class DetailInfActivity extends AppCompatActivity {
     RecyclerView rvPlatform;
     ImageView btnBack;
     ApiInterface apiInterface;
-    TextView tvNama,tvlokasi;
+    TextView tvNama,tvlokasi,tvwa;
     ImageView ivprofile;
     ProgressBar progressBar;
     Utils utils;
@@ -53,6 +55,7 @@ public class DetailInfActivity extends AppCompatActivity {
         tvlokasi = findViewById(R.id.tvlocation);
         ivprofile = findViewById(R.id.ivprofile);
         progressBar = findViewById(R.id.rolling);
+        tvwa = findViewById(R.id.tvwa);
 
         Call<GetInfById> getInfByIdCall = apiInterface.getInfById(sessionId);
         utils.showDialog(progressBar);
@@ -83,6 +86,17 @@ public class DetailInfActivity extends AppCompatActivity {
     private void updateDetail(Influencer influencer) {
         tvNama.setText(influencer.getUser().getName());
         tvlokasi.setText(influencer.getUser().getLocation());
+        tvwa.setText(" "+influencer.getUser().getWa());
+
+        tvwa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://api.whatsapp.com/send?phone="+influencer.getUser().getWa();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         try {
             if (influencer.getUser().getPhoto_profile() != null && influencer.getUser().getPhoto_profile() != "" ) {

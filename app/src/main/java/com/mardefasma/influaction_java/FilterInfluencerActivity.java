@@ -26,9 +26,8 @@ import com.mardefasma.influaction_java.adapter.ProductCategoryAdapter;
 import com.mardefasma.influaction_java.api.ApiClient;
 import com.mardefasma.influaction_java.api.ApiInterface;
 import com.mardefasma.influaction_java.api.api_res.GetInf;
-import com.mardefasma.influaction_java.model.IconInfluencer;
 import com.mardefasma.influaction_java.api.model.Influencer;
-import com.mardefasma.influaction_java.api.api_res.LoginUser;
+import com.mardefasma.influaction_java.model.IconInfluencer;
 import com.mardefasma.influaction_java.model.ProductCategory;
 import com.mardefasma.influaction_java.ui.login.LoginActivity;
 import com.squareup.picasso.Picasso;
@@ -36,8 +35,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    String TAG = "Main";
+public class FilterInfluencerActivity extends AppCompatActivity {
+
+    String TAG = "Filter";
 
     InfluencerAdapter influencerAdapter;
     ProductCategoryAdapter productCategoryAdapter;
@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_filter_influencer);
+        String sessionId = getIntent().getStringExtra("FILTER_NAME");
 
         mApiInterface = ApiClient.getRetrofitInstance().create(ApiInterface.class);
         utils = new Utils();
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Preferences.clearLoggedInUser(getBaseContext());
                 signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                startActivity(new Intent(FilterInfluencerActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -128,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setInfluencerItemRecycler(List<Influencer> influencerList){
 
-        rvInfluencer = findViewById(R.id.influencer_recycler);
-        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-//        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        rvInfluencer = findViewById(R.id.influencer_small_recycler);
+//        RecyclerView.LayoutManager layoutManager= new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         rvInfluencer.setLayoutManager(layoutManager);
         influencerAdapter = new InfluencerAdapter(this, influencerList);
         rvInfluencer.setAdapter(influencerAdapter);
@@ -146,4 +147,5 @@ public class MainActivity extends AppCompatActivity {
         productCatRecycler.setAdapter(productCategoryAdapter);
 
     }
+
 }

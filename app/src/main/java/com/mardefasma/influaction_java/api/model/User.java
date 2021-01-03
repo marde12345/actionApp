@@ -16,16 +16,25 @@ public class User {
     private String photo_profile;
     @SerializedName("location")
     private String location;
+    @SerializedName("wa")
+    private String wa;
 
-    public User(Integer id, String name, String email, String role, String photo_profile, String location) {
+    public User(Integer id, String name, String email, String role, String photo_profile, String location, String wa) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.role = role;
         this.photo_profile = photo_profile;
         this.location = location;
+        this.wa = wa;
+    }
 
-        this.setPhoto_profile(photo_profile);
+    public String getWa() {
+        return wa;
+    }
+
+    public void setWa(String wa) {
+        this.wa = wa;
     }
 
     @Override

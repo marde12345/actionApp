@@ -1,104 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailInfActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back" />
-    <ImageView
-        android:id="@+id/ivprofile"
-        android:layout_width="256dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="16dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:transitionName="image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bg_0" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="450dp"
-        android:background="@drawable/bg_detail_page"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/tvname"
+        <ImageView
+            android:id="@+id/ivback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:fontFamily="@font/rubik_bold"
-            android:textSize="20sp"
-            android:textColor="@android:color/background_dark"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:hint="Nama"
-            />
-        <TextView
-            android:id="@+id/tvlocation"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginTop="24dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/rubik_medium"
-            android:drawableLeft="@drawable/ic_placeholder_24"
-            android:gravity="center_vertical"
-            android:hint="Lokasi"
-            android:textColor="@android:color/background_dark"
-            android:textSize="15sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvname" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/rv_platform"
-            app:layout_constraintBottom_toTopOf="@id/rv_platform"
-            android:fontFamily="@font/rubik_medium"
-            android:text="Platform Influencer"/>
-
-        <ProgressBar
-            android:id="@+id/rolling"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="match_parent"
-            android:indeterminate="true"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-
-            app:layout_constraintTop_toBottomOf="@+id/tvlocation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvlocation"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_platform"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/tvlocation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_back" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvphotoprofile"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvlocation"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:listitem="@layout/platform_row_item" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/cldetail">
+            <ImageView
+                android:id="@+id/ivprofile"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_margin="16dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:transitionName="image"
+                app:srcCompat="@drawable/bg_0" />
+        </androidx.cardview.widget.CardView>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cldetail"
+            android:layout_width="0dp"
+            android:layout_height="450dp"
+            android:background="@drawable/bg_detail_page"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cvphotoprofile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tvname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:fontFamily="@font/rubik_bold"
+                android:textSize="20sp"
+                android:textColor="@android:color/background_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="Nama"
+                />
+            <TextView
+                android:id="@+id/tvlocation"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="24dp"
+                android:fontFamily="@font/rubik_medium"
+                android:drawableLeft="@drawable/ic_placeholder_24"
+                android:gravity="center_vertical"
+                android:hint="Lokasi"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvname" />
+            <TextView
+                android:id="@+id/tvwa"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginStart="24dp"
+                android:fontFamily="@font/rubik_medium"
+                android:drawableLeft="@drawable/ic_whatsapp_24"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/background_dark"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvlocation" />
+
+            <TextView
+                android:id="@+id/tvplatformyangada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="@id/rv_platform"
+                app:layout_constraintTop_toBottomOf="@id/tvwa"
+                android:fontFamily="@font/rubik_medium"
+                android:text="Platform Influencer"/>
+
+            <ProgressBar
+                android:id="@+id/rolling"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:indeterminate="true"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+
+                app:layout_constraintTop_toBottomOf="@+id/tvplatformyangada"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvlocation"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_platform"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvplatformyangada"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvlocation"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:listitem="@layout/platform_row_item" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

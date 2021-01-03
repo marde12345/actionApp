@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,10 +46,23 @@ public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.In
     @NonNull
     @Override
     public InfluencerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater
-                .from(parent.getContext())
-                .inflate(R.layout.influencer_row_item,
-                        parent,false);
+        View view;
+        String name = parent.getContext().getClass().getSimpleName();
+        Log.d(TAG, "onCreateViewHolder: "+name);
+
+        if (name.equals("FilterInfluencerActivity")){
+            Log.d(TAG, "onCreateViewHolder: bener");
+            view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.influencer_small_row_item,
+                            parent,false);
+        }else{
+            Log.d(TAG, "onCreateViewHolder: salah");
+            view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.influencer_row_item,
+                            parent,false);
+        }
         return new InfluencerViewHolder(view);
     }
 
@@ -81,16 +95,14 @@ public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.In
             Log.d("mbuh", "onBindViewHolder: ");
         };
 
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(
-                holder.childRv.getContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(holder.childRv.getContext(),LinearLayoutManager.HORIZONTAL,false);
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(holder.childRv.getContext(),1);
         layoutManager.setInitialPrefetchItemCount(influencer.getPlatformList().size());
         PlatformAdapter childItemAdapter = new PlatformAdapter(context,influencer.getPlatformList());
         holder.childRv.setLayoutManager(layoutManager);
         holder.childRv.setAdapter(childItemAdapter);
         holder.childRv.setRecycledViewPool(viewPool);
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
