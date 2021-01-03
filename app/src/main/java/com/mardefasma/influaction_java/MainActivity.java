@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -42,9 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView profileImageView;
     TextView profileNameTextView;
+    ProgressBar progressBar;
 
     RecyclerView rvInfluencer, productCatRecycler;
     ApiInterface mApiInterface;
+    Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mApiInterface = ApiClient.getRetrofitInstance().create(ApiInterface.class);
-        
+        utils = new Utils();
+
         profileImageView = findViewById(R.id.imageView3);
         profileNameTextView = findViewById(R.id.textView5);
+        progressBar = findViewById(R.id.rolling);
         final Button signOutButton = findViewById(R.id.logout);
 
         List<ProductCategory> productCategoryList = new ArrayList<>();
@@ -65,15 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
         setProductRecycler(productCategoryList);
 
-
-//        List<Influencer> influencerList = new ArrayList<>();
-//        influencerList.add(new Influencer(1,"Marde Fasma","50000", "Madiun","https://loremflickr.com/300/400", ChildIconList1()));
-//        influencerList.add(new Influencer(2,"Spongebob","100000", "Bikini Bottom","https://loremflickr.com/300/400", ChildIconList2()));
-//        influencerList.add(new Influencer(3,"Patrick","50000", "Bikini Bottom","https://loremflickr.com/300/400", ChildIconList1()));
-//        influencerList.add(new Influencer(4,"Olaf","500", "Kapal","https://loremflickr.com/300/400", ChildIconList1()));
-//        influencerList.add(new Influencer(5,"Flying Dutchman","900000", "Loker Devi John","https://loremflickr.com/300/400", ChildIconList1()));
-
         Call<GetInf> getInfCall = mApiInterface.getInfluencers();
+        utils.showDialog(progressBar);
         getInfCall.enqueue(new Callback<GetInf>() {
             @Override
             public void onResponse(Call<GetInf> call, Response<GetInf> response) {
@@ -81,12 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 List<Influencer> influencerList = response.body().getInfluencerList();
                 if (influencerList.size()>0) {
                     setInfluencerItemRecycler(influencerList);
+                    utils.hideDialog(progressBar);
                 }
             }
 
             @Override
             public void onFailure(Call<GetInf> call, Throwable t) {
-                Log.e(TAG, "onFailure: ",t );
+//                Log.e(TAG, "onFailure: ",t );
+                utils.hideDialog(progressBar);
             }
         });
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 profileNameTextView.setText("Hei " + "Anonymous" + "!");
             }
             Picasso.get().load(Uri.parse(Preferences.getKeyPhotoUrl(getBaseContext())))
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.profile)
                     .into(profileImageView);
         }catch (Exception e){
             Log.d("mbuh", "onCreate: asdasd");

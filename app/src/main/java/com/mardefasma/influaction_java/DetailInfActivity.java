@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mardefasma.influaction_java.adapter.InfluencerAdapter;
@@ -36,6 +37,8 @@ public class DetailInfActivity extends AppCompatActivity {
     ApiInterface apiInterface;
     TextView tvNama,tvlokasi;
     ImageView ivprofile;
+    ProgressBar progressBar;
+    Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,24 +46,28 @@ public class DetailInfActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_inf);
         apiInterface = ApiClient.getRetrofitInstance().create(ApiInterface.class);
         Integer sessionId = getIntent().getIntExtra("ID_INF",0);
+        utils = new Utils();
 
         btnBack = findViewById(R.id.ivback);
         tvNama = findViewById(R.id.tvname);
         tvlokasi = findViewById(R.id.tvlocation);
         ivprofile = findViewById(R.id.ivprofile);
+        progressBar = findViewById(R.id.rolling);
 
         Call<GetInfById> getInfByIdCall = apiInterface.getInfById(sessionId);
+        utils.showDialog(progressBar);
         getInfByIdCall.enqueue(new Callback<GetInfById>() {
             @Override
             public void onResponse(Call<GetInfById> call, Response<GetInfById> response) {
                 Log.d(TAG, "onResponse: "+response.body().getInfluencer().toString());
                 Influencer influencer = response.body().getInfluencer();
                 updateDetail(influencer);
+                utils.hideDialog(progressBar);
             }
 
             @Override
             public void onFailure(Call<GetInfById> call, Throwable t) {
-
+                utils.hideDialog(progressBar);
             }
         });
 
@@ -80,10 +87,10 @@ public class DetailInfActivity extends AppCompatActivity {
         try {
             if (influencer.getUser().getPhoto_profile() != null && influencer.getUser().getPhoto_profile() != "" ) {
                 Log.d(TAG, "onBindViewHolder: " + influencer.getUser().getPhoto_profile());
-                Picasso.get().load(influencer.getUser().getPhoto_profile()).memoryPolicy(MemoryPolicy.NO_CACHE)
+                Picasso.get().load(influencer.getUser().getPhoto_profile()).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.progress_animation)
                         .into(ivprofile);
             }else {
-                Picasso.get().load("https://loremflickr.com/300/400").memoryPolicy(MemoryPolicy.NO_CACHE)
+                Picasso.get().load("https://loremflickr.com/300/400").memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.progress_animation)
                         .into(ivprofile);
             }
 

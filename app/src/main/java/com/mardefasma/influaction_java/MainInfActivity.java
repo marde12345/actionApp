@@ -44,6 +44,7 @@ public class MainInfActivity extends AppCompatActivity {
     EndorsementAdapter endorsementAdapter;
     RecyclerView rvEndorse;
     ProgressBar mProgressDialog;
+    Utils utils;
 
     private ArrayList<Endorse> endorses;
 
@@ -53,6 +54,7 @@ public class MainInfActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_inf);
 
         mApiInterface = ApiClient.getRetrofitInstance().create(ApiInterface.class);
+        utils = new Utils();
 
         profileImageView = findViewById(R.id.imageView3);
         profileNameTextView = findViewById(R.id.textView5);
@@ -74,18 +76,18 @@ public class MainInfActivity extends AppCompatActivity {
         }
 
         Call<List<Endorse>> listCall = mApiInterface.getEndorseByInfId(Preferences.getKeyId(getBaseContext()));
-        showDialog(mProgressDialog);
+        utils.showDialog(mProgressDialog);
         listCall.enqueue(new Callback<List<Endorse>>() {
             @Override
             public void onResponse(Call<List<Endorse>> call, Response<List<Endorse>> response) {
                 setEndorseItemRecycler(response.body());
-                hideDialog(mProgressDialog);
+                utils.hideDialog(mProgressDialog);
             }
 
             @Override
             public void onFailure(Call<List<Endorse>> call, Throwable t) {
                 Log.e(TAG, "onFailure: ",t );
-                hideDialog(mProgressDialog);
+                utils.hideDialog(mProgressDialog);
             }
         });
 
@@ -115,17 +117,5 @@ public class MainInfActivity extends AppCompatActivity {
         rvEndorse.setLayoutManager(layoutManager);
         endorsementAdapter = new EndorsementAdapter(this, endorseList);
         rvEndorse.setAdapter(endorsementAdapter);
-    }
-
-    public void showDialog(ProgressBar progressBar) {
-        progressBar.setIndeterminate(true);
-
-        if(progressBar.getVisibility() != View.VISIBLE)
-            progressBar.setVisibility(View.VISIBLE);
-    }
-
-    public void hideDialog(ProgressBar progressBar) {
-        if(progressBar.getVisibility() == View.VISIBLE)
-            progressBar.setVisibility(View.GONE);
     }
 }

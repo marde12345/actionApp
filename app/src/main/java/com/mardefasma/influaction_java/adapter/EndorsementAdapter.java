@@ -46,10 +46,10 @@ public class EndorsementAdapter extends RecyclerView.Adapter<EndorsementAdapter.
 
         try {
             if (endorse.getCust().getPhoto_profile() != null && endorse.getCust().getPhoto_profile() != "" ) {
-                Picasso.get().load(endorse.getCust().getPhoto_profile()).placeholder(R.drawable.profile).memoryPolicy(MemoryPolicy.NO_CACHE)
+                Picasso.get().load(endorse.getCust().getPhoto_profile()).placeholder(R.drawable.progress_animation).memoryPolicy(MemoryPolicy.NO_CACHE)
                         .into(holder.ivcust);
             }else {
-                Picasso.get().load("https://loremflickr.com/300/400").placeholder(R.drawable.profile).memoryPolicy(MemoryPolicy.NO_CACHE)
+                Picasso.get().load("https://loremflickr.com/300/400").placeholder(R.drawable.progress_animation).memoryPolicy(MemoryPolicy.NO_CACHE)
                         .into(holder.ivcust);
             }
 

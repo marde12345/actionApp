@@ -72,9 +72,9 @@ public class InfluencerAdapter extends RecyclerView.Adapter<InfluencerAdapter.In
         try {
             if (influencer.getUser().getPhoto_profile() != null && influencer.getUser().getPhoto_profile() != "" ) {
                 Log.d(TAG, "onBindViewHolder: " + influencer.getUser().getPhoto_profile());
-                Picasso.get().load(influencer.getUser().getPhoto_profile()).placeholder(R.mipmap.ic_launcher).memoryPolicy(MemoryPolicy.NO_CACHE).into(holder.ivInfluencerImage);
+                Picasso.get().load(influencer.getUser().getPhoto_profile()).placeholder(R.drawable.progress_animation).memoryPolicy(MemoryPolicy.NO_CACHE).into(holder.ivInfluencerImage);
             }else {
-                Picasso.get().load("https://loremflickr.com/300/400").placeholder(R.mipmap.ic_launcher).memoryPolicy(MemoryPolicy.NO_CACHE).into(holder.ivInfluencerImage);
+                Picasso.get().load("https://loremflickr.com/300/400").placeholder(R.drawable.progress_animation).memoryPolicy(MemoryPolicy.NO_CACHE).into(holder.ivInfluencerImage);
             }
 
         }catch (Exception e){
