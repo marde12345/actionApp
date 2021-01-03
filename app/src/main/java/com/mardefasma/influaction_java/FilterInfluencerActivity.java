@@ -42,19 +42,21 @@ public class FilterInfluencerActivity extends AppCompatActivity {
     InfluencerAdapter influencerAdapter;
     ProductCategoryAdapter productCategoryAdapter;
 
-    ImageView profileImageView;
+    ImageView profileImageView, btnBack;
     TextView profileNameTextView;
     ProgressBar progressBar;
 
     RecyclerView rvInfluencer, productCatRecycler;
     ApiInterface mApiInterface;
     Utils utils;
+    Call<GetInf> getInfCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_influencer);
-        String sessionId = getIntent().getStringExtra("FILTER_NAME");
+        String sessionFilter = getIntent().getStringExtra("FILTER_NAME");
+        Log.d(TAG, "onCreate: "+sessionFilter);
 
         mApiInterface = ApiClient.getRetrofitInstance().create(ApiInterface.class);
         utils = new Utils();
@@ -62,22 +64,33 @@ public class FilterInfluencerActivity extends AppCompatActivity {
         profileImageView = findViewById(R.id.imageView3);
         profileNameTextView = findViewById(R.id.textView5);
         progressBar = findViewById(R.id.rolling);
+        btnBack = findViewById(R.id.ivback);
         final Button signOutButton = findViewById(R.id.logout);
 
-        List<ProductCategory> productCategoryList = new ArrayList<>();
-        productCategoryList.add(new ProductCategory(1, "Trending"));
-        productCategoryList.add(new ProductCategory(2, "Most Popular"));
-        productCategoryList.add(new ProductCategory(3, "Instagram"));
-        productCategoryList.add(new ProductCategory(4, "Terdekat"));
+        profileNameTextView.setText(sessionFilter);
 
-        setProductRecycler(productCategoryList);
+        switch (sessionFilter){
+            case "Instagram":
+                getInfCall = mApiInterface.getFilterInstagram();
+                break;
+            case "Trending":
+                getInfCall = mApiInterface.getFilterTrending();
+                break;
+            case "Terdekat":
+                getInfCall = mApiInterface.getFilterTerdekat();
+                break;
+            case "Populer":
+                getInfCall = mApiInterface.getFilterPopuler();
+                break;
+            default:
+                getInfCall = mApiInterface.getInfluencers();
+                break;
+        }
 
-        Call<GetInf> getInfCall = mApiInterface.getInfluencers();
         utils.showDialog(progressBar);
         getInfCall.enqueue(new Callback<GetInf>() {
             @Override
             public void onResponse(Call<GetInf> call, Response<GetInf> response) {
-                Log.d(TAG, "onResponse: "+response.body().getInfluencerList().toString());
                 List<Influencer> influencerList = response.body().getInfluencerList();
                 if (influencerList.size()>0) {
                     setInfluencerItemRecycler(influencerList);
@@ -93,12 +106,6 @@ public class FilterInfluencerActivity extends AppCompatActivity {
         });
 
         try {
-            if (Preferences.getLoggedInUser(getBaseContext())!=null &&
-                    !Preferences.getLoggedInUser(getBaseContext()).isEmpty()){
-                profileNameTextView.setText("Hei " + Preferences.getLoggedInUser(getBaseContext()) + "!");
-            } else{
-                profileNameTextView.setText("Hei " + "Anonymous" + "!");
-            }
             Picasso.get().load(Uri.parse(Preferences.getKeyPhotoUrl(getBaseContext())))
                     .placeholder(R.drawable.profile)
                     .into(profileImageView);
@@ -106,14 +113,10 @@ public class FilterInfluencerActivity extends AppCompatActivity {
             Log.d("mbuh", "onCreate: asdasd");
         }
 
-        if (!Preferences.getLoggedInStatus(getBaseContext())) signOutButton.setVisibility(View.GONE);
-        signOutButton.setOnClickListener(new View.OnClickListener() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Preferences.clearLoggedInUser(getBaseContext());
-                signOut();
-                startActivity(new Intent(FilterInfluencerActivity.this, LoginActivity.class));
-                finish();
+                onBackPressed();
             }
         });
     }

@@ -28,6 +28,22 @@ public interface ApiInterface {
 //    TODO: buat api influencer
     Call<GetInf> getInfluencers();
 
+    @GET("filterInstagram")
+//    TODO: buat api influencer
+    Call<GetInf> getFilterInstagram();
+
+    @GET("filterTrending")
+//    TODO: buat api influencer
+    Call<GetInf> getFilterTrending();
+
+    @GET("filterTerdekat")
+//    TODO: buat api influencer
+    Call<GetInf> getFilterTerdekat();
+
+    @GET("filterPopuler")
+//    TODO: buat api influencer
+    Call<GetInf> getFilterPopuler();
+
     @FormUrlEncoded
     @POST("userInf")
 //    TODO: buat api influencer detail id

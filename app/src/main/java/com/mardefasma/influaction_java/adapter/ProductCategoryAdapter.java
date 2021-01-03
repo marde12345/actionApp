@@ -45,7 +45,7 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, FilterInfluencerActivity.class);
-                intent.putExtra("ID_INF", productCategory.getProductName());
+                intent.putExtra("FILTER_NAME", productCategory.getProductName());
                 context.startActivity(intent);
             }
         });

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<ProductCategory> productCategoryList = new ArrayList<>();
         productCategoryList.add(new ProductCategory(1, "Trending"));
-        productCategoryList.add(new ProductCategory(2, "Most Popular"));
+        productCategoryList.add(new ProductCategory(2, "Populer"));
         productCategoryList.add(new ProductCategory(3, "Instagram"));
         productCategoryList.add(new ProductCategory(4, "Terdekat"));
 
