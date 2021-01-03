@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -41,6 +43,7 @@ public class MainInfActivity extends AppCompatActivity {
 
     EndorsementAdapter endorsementAdapter;
     RecyclerView rvEndorse;
+    ProgressBar mProgressDialog;
 
     private ArrayList<Endorse> endorses;
 
@@ -53,6 +56,7 @@ public class MainInfActivity extends AppCompatActivity {
 
         profileImageView = findViewById(R.id.imageView3);
         profileNameTextView = findViewById(R.id.textView5);
+        mProgressDialog = findViewById(R.id.rolling);
         final Button signOutButton = findViewById(R.id.logout);
 
         try {
@@ -70,15 +74,18 @@ public class MainInfActivity extends AppCompatActivity {
         }
 
         Call<List<Endorse>> listCall = mApiInterface.getEndorseByInfId(Preferences.getKeyId(getBaseContext()));
+        showDialog(mProgressDialog);
         listCall.enqueue(new Callback<List<Endorse>>() {
             @Override
             public void onResponse(Call<List<Endorse>> call, Response<List<Endorse>> response) {
                 setEndorseItemRecycler(response.body());
+                hideDialog(mProgressDialog);
             }
 
             @Override
             public void onFailure(Call<List<Endorse>> call, Throwable t) {
                 Log.e(TAG, "onFailure: ",t );
+                hideDialog(mProgressDialog);
             }
         });
 
@@ -108,5 +115,17 @@ public class MainInfActivity extends AppCompatActivity {
         rvEndorse.setLayoutManager(layoutManager);
         endorsementAdapter = new EndorsementAdapter(this, endorseList);
         rvEndorse.setAdapter(endorsementAdapter);
+    }
+
+    public void showDialog(ProgressBar progressBar) {
+        progressBar.setIndeterminate(true);
+
+        if(progressBar.getVisibility() != View.VISIBLE)
+            progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideDialog(ProgressBar progressBar) {
+        if(progressBar.getVisibility() == View.VISIBLE)
+            progressBar.setVisibility(View.GONE);
     }
 }
