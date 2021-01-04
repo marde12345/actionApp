@@ -107,7 +107,6 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
         LayoutInflater inflater = ((AppCompatActivity)context).getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.form_data, null);
         dialog.setCancelable(true);
-        dialog.setIcon(R.mipmap.ic_launcher);
         dialog.setTitle("Pilih lokasi : ");
 
         rvLocation = dialogView.findViewById(R.id.rv_location);
