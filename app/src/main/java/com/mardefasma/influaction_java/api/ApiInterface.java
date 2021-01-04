@@ -36,9 +36,13 @@ public interface ApiInterface {
 //    TODO: buat api influencer
     Call<GetInf> getFilterTrending();
 
-    @GET("filterTerdekat")
+    @FormUrlEncoded
+    @POST("filterTerdekat")
 //    TODO: buat api influencer
-    Call<GetInf> getFilterTerdekat();
+    Call<GetInf> getFilterTerdekat(@Field("location") String location);
+
+    @GET("getFilterKota")
+    Call<List<String>> getFilterKota();
 
     @GET("filterPopuler")
 //    TODO: buat api influencer

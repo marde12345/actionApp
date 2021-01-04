@@ -77,7 +77,8 @@ public class FilterInfluencerActivity extends AppCompatActivity {
                 getInfCall = mApiInterface.getFilterTrending();
                 break;
             case "Terdekat":
-                getInfCall = mApiInterface.getFilterTerdekat();
+                String sessionFilterLocation = getIntent().getStringExtra("FILTER_LOCATION");
+                getInfCall = mApiInterface.getFilterTerdekat(sessionFilterLocation);
                 break;
             case "Populer":
                 getInfCall = mApiInterface.getFilterPopuler();
