@@ -18,24 +18,8 @@ public class User {
     private String location;
     @SerializedName("wa")
     private String wa;
-
-    public User(Integer id, String name, String email, String role, String photo_profile, String location, String wa) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.role = role;
-        this.photo_profile = photo_profile;
-        this.location = location;
-        this.wa = wa;
-    }
-
-    public String getWa() {
-        return wa;
-    }
-
-    public void setWa(String wa) {
-        this.wa = wa;
-    }
+    @SerializedName("deskripsi")
+    private String deskripsi;
 
     @Override
     public String toString() {
@@ -46,7 +30,36 @@ public class User {
                 ", role='" + role + '\'' +
                 ", photo_profile='" + photo_profile + '\'' +
                 ", location='" + location + '\'' +
+                ", wa='" + wa + '\'' +
+                ", deskripsi='" + deskripsi + '\'' +
                 '}';
+    }
+
+    public User(Integer id, String name, String email, String role, String photo_profile, String location, String wa, String deskripsi) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.photo_profile = photo_profile;
+        this.location = location;
+        this.wa = wa;
+        this.deskripsi = deskripsi;
+    }
+
+    public String getDeskripsi() {
+        return deskripsi;
+    }
+
+    public void setDeskripsi(String deskripsi) {
+        this.deskripsi = deskripsi;
+    }
+
+    public String getWa() {
+        return wa;
+    }
+
+    public void setWa(String wa) {
+        this.wa = wa;
     }
 
     public String getRole() {

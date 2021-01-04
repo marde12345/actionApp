@@ -1,10 +1,13 @@
 package com.mardefasma.influaction_java.adapter;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mardefasma.influaction_java.DetailInfActivity;
@@ -21,6 +24,8 @@ public class ProductCategoryAdapter extends RecyclerView.Adapter<ProductCategory
 
     Context context;
     List<ProductCategory> productCategoryList;
+    Dialog dialog;
+    LayoutInflater inflater;
 
     public ProductCategoryAdapter(Context context, List<ProductCategory> productCategoryList) {
         this.context = context;

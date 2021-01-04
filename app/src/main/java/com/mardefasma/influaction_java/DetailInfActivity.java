@@ -37,7 +37,7 @@ public class DetailInfActivity extends AppCompatActivity {
     RecyclerView rvPlatform;
     ImageView btnBack;
     ApiInterface apiInterface;
-    TextView tvNama,tvlokasi,tvwa;
+    TextView tvNama,tvlokasi,tvwa, tvdeskripsi;
     ImageView ivprofile;
     ProgressBar progressBar;
     Utils utils;
@@ -53,6 +53,7 @@ public class DetailInfActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.ivback);
         tvNama = findViewById(R.id.tvname);
         tvlokasi = findViewById(R.id.tvlocation);
+        tvdeskripsi = findViewById(R.id.tvdeskripsi);
         ivprofile = findViewById(R.id.ivprofile);
         progressBar = findViewById(R.id.rolling);
         tvwa = findViewById(R.id.tvwa);
@@ -87,6 +88,7 @@ public class DetailInfActivity extends AppCompatActivity {
         tvNama.setText(influencer.getUser().getName());
         tvlokasi.setText(influencer.getUser().getLocation());
         tvwa.setText(" "+influencer.getUser().getWa());
+        tvdeskripsi.setText(influencer.getUser().getDeskripsi());
 
         tvwa.setOnClickListener(new View.OnClickListener() {
             @Override
